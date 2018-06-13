@@ -67,7 +67,6 @@ export default {
     register(e) {
       this.$nextTick(() => {
         const target = e.target.type === 'submit' ? e.target : e.target.parentElement
-
         if (target.canSubmit) {
           this.submit()
         }
@@ -83,11 +82,12 @@ export default {
           password: this.password,
           avatar: `https://api.adorable.io/avatars/200/${this.username}.png`
         }
-        //const localUser = ls.getItem('user')
-        const localUser = this.$store.state.user
 
+        const localUser = this.$store.state.user
         if (localUser) {
+
           if (localUser.name === user.name) {
+
             this.showMsg('用户名已存在')
           } else {
             this.login(user)
