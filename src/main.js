@@ -12,7 +12,6 @@ Vue.config.productionTip = false
 new Vue({
   el: '#app',
   router,
-  // 注入 store
   store,
   components: { App },
   template: '<App/>'
