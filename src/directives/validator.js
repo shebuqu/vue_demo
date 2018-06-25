@@ -1,4 +1,4 @@
-function validate(el, modifiers, bindingValue) {
+function validate(el, modifiers, bindingValue) { 
   bindingValue = bindingValue && typeof bindingValue === 'object' ? bindingValue : {}
   const value = typeof el.value === 'string' ? el.value.trim() : ''
   const { title = '该项', error } = bindingValue

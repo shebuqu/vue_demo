@@ -23,9 +23,14 @@ const mutations = {
 
 const actions = {
   login({ commit }, user) {
-    if (user) commit('UPDATE_USER', user)
-    commit('UPDATE_AUTH', true)
-    router.push('/')
+    if (user.strict) 
+      commit('UPDATE_USER', user)
+      commit('UPDATE_AUTH', true)
+      router.push('/')
+  },
+  logout({ commit }){
+    commit('UPDATE_AUTH', false)
+    router.push({name: 'Home', params: {logout: true} })
   }
 }
 

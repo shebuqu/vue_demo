@@ -49,7 +49,6 @@ export default {
         showTitle()
       }
     }
-
     events.forEach((event) => {
       el.addEventListener(event, handler, false)
     })
@@ -60,6 +59,7 @@ export default {
       })
       el.destroy = null
     }
+
   },
   unbind(el) {
     el.destroy()
