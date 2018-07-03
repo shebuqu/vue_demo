@@ -18,10 +18,8 @@ router.beforeEach((to, from, next) => {
 
   app.$message.hide()
 
-  if (
-    (auth && to.path.indexOf('/auth/') !== -1) ||
-    (!auth && to.meta.auth)
-  ) {
+  if ((auth && to.path.indexOf('/auth/') !== -1) || (!auth && to.meta.auth)) 
+  {
     next('/')
   } else {
     next()
