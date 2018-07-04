@@ -38,6 +38,15 @@ export default {
       content: '' // 文章内容
     }
   },
+  beforeMount(){
+      setTimeout(() => {
+        console.log(this)// vue 实例
+      }, 1000)
+
+      setTimeout(function () {
+        console.log(this)// window
+      }, 2000)
+  },
   mounted() {
     const simplemde = new SimpleMDE({
       element: document.querySelector('#editor'),
@@ -52,11 +61,9 @@ export default {
         codeSyntaxHighlighting: true
       }
     })
-
     simplemde.codemirror.on('change', () => {
       this.content = simplemde.value()
     })
-
     this.simplemde = simplemde
     this.fillContent()
   },
@@ -84,7 +91,7 @@ export default {
           content
         }
 
-        console.log(article)
+        //console.log(article)
         this.$store.dispatch('post', { article })
         this.clearData()
       }
