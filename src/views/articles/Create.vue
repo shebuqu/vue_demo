@@ -35,17 +35,24 @@ export default {
   data() {
     return {
       title: '', // 文章标题
-      content: '' // 文章内容
+      content: '', // 文章内容
+      articleId: undefined // 文章 ID
     }
   },
-  beforeMount(){
-      setTimeout(() => {
-        console.log(this)// vue 实例
-      }, 1000)
-
-      setTimeout(function () {
-        console.log(this)// window
-      }, 2000)
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      vm.setArticleId(vm.$route.params.articleId)
+    })
+  },
+  beforeRouteLeave(to, from, next) {
+    this.clearData()
+    next()
+  },
+  watch: {
+    '$route'(to) {
+      this.clearData()
+      this.setArticleId(to.params.articleId)
+    }
   },
   mounted() {
     const simplemde = new SimpleMDE({
@@ -61,25 +68,35 @@ export default {
         codeSyntaxHighlighting: true
       }
     })
+
     simplemde.codemirror.on('change', () => {
       this.content = simplemde.value()
     })
+
     this.simplemde = simplemde
-    this.fillContent()
   },
   methods: {
     saveTitle() {
       ls.setItem('smde_title', this.title)
     },
-    fillContent() {
+    fillContent(articleId) {
       const simplemde = this.simplemde
-      const title = ls.getItem('smde_title')
+      const smde_title = ls.getItem('smde_title')
 
-      if (title !== null) {
-        this.title = title
+      if (articleId !== undefined) {
+        const article = this.$store.getters.getArticleById(articleId)
+
+        if (article) {
+          const { title, content } = article
+
+          this.title = smde_title || title
+          this.content = simplemde.value() || content
+          simplemde.value(this.content)
+        }
+      } else {
+        this.title = smde_title
+        this.content = simplemde.value()
       }
-
-      this.content = simplemde.value()
     },
     post() {
       const title = this.title
@@ -91,8 +108,7 @@ export default {
           content
         }
 
-        //console.log(article)
-        this.$store.dispatch('post', { article })
+        this.$store.dispatch('post', { article, articleId: this.articleId })
         this.clearData()
       }
     },
@@ -101,6 +117,17 @@ export default {
       ls.removeItem('smde_title')
       this.simplemde.value('')
       this.simplemde.clearAutosavedValue()
+    },
+    setArticleId(articleId) {
+      const localArticleId = ls.getItem('articleId')
+
+      if (articleId !== undefined && !(articleId === localArticleId)) {
+        this.clearData()
+      }
+
+      this.articleId = articleId
+      this.fillContent(articleId)
+      ls.setItem('articleId', articleId)
     }
   }
 }
